@@ -1,4 +1,4 @@
-import { useState, KeyboardEvent } from "react";
+import { useState, type KeyboardEvent } from "react";
 
 // Define the type for homophone data from API
 interface HomophoneResponse {
