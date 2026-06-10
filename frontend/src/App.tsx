@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useState, KeyboardEvent } from "react";
+
+// Define the type for homophone data from API
+interface HomophoneResponse {
+  word: string;
+  homophones: string[];
+  message?: string;
+}
 
 export default function App() {
-  const [word, setWord] = useState("");
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [queriedWord, setQueriedWord] = useState("");
+  const [word, setWord] = useState<string>("");
+  const [result, setResult] = useState<string[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [queriedWord, setQueriedWord] = useState<string>("");
 
-  async function searchWord() {
+  async function searchWord(): Promise<void> {
     if (!word.trim()) return;
     setLoading(true);
     setError("");
@@ -16,7 +23,7 @@ export default function App() {
     try {
       const response = await fetch(`http://127.0.0.1:8000/homophone/${word.trim()}`);
       if (!response.ok) throw new Error("Server error");
-      const data = await response.json();
+      const data: HomophoneResponse = await response.json();
       setResult(data.homophones || []);
     } catch (err) {
       setError("Couldn't reach the server. Make sure your API is running.");
@@ -25,7 +32,7 @@ export default function App() {
     }
   }
 
-  function handleKeyDown(e) {
+  function handleKeyDown(e: KeyboardEvent<HTMLInputElement>): void {
     if (e.key === "Enter") searchWord();
   }
 
@@ -57,7 +64,7 @@ export default function App() {
           <input
             id="word-input"
             value={word}
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               const val = e.target.value.toLowerCase();
               setWord(val);
               if (!val.trim()) { setResult(null); setQueriedWord(""); setError(""); }
@@ -98,7 +105,7 @@ export default function App() {
         {/* Loading */}
         {loading && (
           <div className="flex justify-center gap-2 py-10">
-            {[0, 1, 2].map((i) => (
+            {[0, 1, 2].map((i: number) => (
               <span
                 key={i}
                 className="w-2 h-2 rounded-full bg-amber-400 animate-bounce"
@@ -138,7 +145,7 @@ export default function App() {
             </div>
 
             <div className="space-y-2">
-              {result.map((item, index) => (
+              {result.map((item: string, index: number) => (
                 <div
                   key={index}
                   className="flex items-center gap-4 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl px-5 py-4 transition-colors group"
