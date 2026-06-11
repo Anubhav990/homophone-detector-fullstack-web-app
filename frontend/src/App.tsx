@@ -15,13 +15,14 @@ export default function App() {
   const [queriedWord, setQueriedWord] = useState<string>("");
 
   async function searchWord(): Promise<void> {
+    const API_URL = import.meta.env.VITE_API_URL;
     if (!word.trim()) return;
     setLoading(true);
     setError("");
     setResult(null);
     setQueriedWord(word.trim());
     try {
-      const response = await fetch(`http://127.0.0.1:8000/homophone/${word.trim()}`);
+      const response = await fetch(`${API_URL}/homophone/${word.trim()}`);
       if (!response.ok) throw new Error("Server error");
       const data: HomophoneResponse = await response.json();
       setResult(data.homophones || []);
